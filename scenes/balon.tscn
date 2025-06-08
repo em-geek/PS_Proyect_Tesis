@@ -1,0 +1,71 @@
+[gd_scene load_steps=11 format=3 uid="uid://b83whh03r5c5"]
+
+[ext_resource type="Script" path="res://scenes/balon.gd" id="1_lm13t"]
+[ext_resource type="Texture2D" uid="uid://c572b4xmvrd8s" path="res://art/New_All_Fire_Bullet_Pixel_16x16/All_Fire_Bullet_Pixel_16x16_05.png" id="2_640uw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ju15h"]
+atlas = ExtResource("2_640uw")
+region = Rect2(0, 17, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fe84u"]
+atlas = ExtResource("2_640uw")
+region = Rect2(16, 17, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g87li"]
+atlas = ExtResource("2_640uw")
+region = Rect2(32, 17, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ftslt"]
+atlas = ExtResource("2_640uw")
+region = Rect2(48, 17, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kuglx"]
+atlas = ExtResource("2_640uw")
+region = Rect2(64, 17, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_74g08"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ju15h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fe84u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g87li")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ftslt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kuglx")
+}],
+"loop": true,
+"name": &"ball_idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pxuw2"]
+radius = 8.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4rtn4"]
+
+[node name="Balon" type="RigidBody2D"]
+gravity_scale = 0.0
+linear_damp = 5.0
+script = ExtResource("1_lm13t")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_74g08")
+animation = &"ball_idle"
+frame_progress = 0.319288
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_pxuw2")
+
+[node name="hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
+shape = SubResource("CircleShape2D_4rtn4")

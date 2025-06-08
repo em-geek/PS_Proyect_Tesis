@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="2D New Proyect"
+config/name="PS_Project_Tesis"
 run/main_scene="res://scenes/player.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://art/icon.svg"

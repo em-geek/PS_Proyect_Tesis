@@ -17,10 +17,24 @@ var last_enemy_hit: Node2D = null
 var taking_damage = false
 var dead = false
 
+var time_without_moving = 0.0
+var zoom_out_delay = 2.0 # segundos antes de que ocurra el zoom out
+var is_zoomed_out = false
+var zoom_normal = Vector2(2.0, 2.0)
+var zoom_far = Vector2(1.2, 1.2)
+var target_zoom = Vector2(2.0, 2.0)
+
+@onready var camera = $Camera2D
+
+var zoom_combate = Vector2(2.5, 2.5) # más cerca que el zoom_normal
+var zoom_combat_timer = 0.0
+const ZOOM_COMBAT_DURATION = 1.5 # segundos después del último combate para volver al zoom normal
 
 
 func _ready():
 	$AnimatedSprite2D.play("front_idle")
+	camera.zoom = zoom_normal
+	target_zoom = zoom_normal
 
 func _physics_process(delta):
 	if dead:
@@ -36,6 +50,33 @@ func _physics_process(delta):
 			velocity = Vector2.ZERO
 
 	move_and_slide()
+
+	# --- ZOOM CAMARA DESPUÉS DE CALCULAR VELOCIDAD REAL ---
+	if velocity.length() < 1.0:
+		time_without_moving += delta
+		if time_without_moving >= zoom_out_delay and not is_zoomed_out:
+			target_zoom = Vector2(1.2, 1.2) # aleja la cámara
+			is_zoomed_out = true
+	else:
+		time_without_moving = 0.0
+		if is_zoomed_out:
+			target_zoom = Vector2(2.0, 2.0) # regresa al zoom normal
+			is_zoomed_out = false
+
+	$Camera2D.zoom = $Camera2D.zoom.lerp(target_zoom, 5 * delta)
+	
+	# CÁMARA DINÁMICA - desplazamiento hacia enemigo si está cerca
+	var target_offset = Vector2.ZERO
+
+	if enemy_inattack_range and last_enemy_hit:
+		print("En combate con: ", last_enemy_hit.name)
+		var to_enemy = (last_enemy_hit.global_position - global_position).limit_length(50)
+		target_offset = to_enemy / 2.0
+
+	# Interpolación suave del offset
+	camera.offset = camera.offset.lerp(target_offset, 5 * delta)
+
+
 
 	# ATAQUE SIEMPRE DISPONIBLE (mientras esté vivo)
 	if not dead:
